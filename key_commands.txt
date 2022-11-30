@@ -1,0 +1,15 @@
+# Alternative Using pip & virtual environments:
+#  - Create empty virtual environment:
+#      Mac: python3 -m venv ds4b_101_p
+#      Windows: python -m venv ds4b_101_p
+#  - Activate env:
+#      source ds4b_101_p activate
+#      (if this doesn’t work, use Command Palette > Select Python Interpreter > ds4b_101_p)
+#  - Install the requirements.txt
+#      pip install -r 000_environment_setup/requirements.txt
+#  - Adding packages from requirements.txt
+#      Mac: where python
+#      Windows: which python
+#      path/to/python -m pip install
+#  - Freezing dependencies
+#      pip freeze > requirements.txt
