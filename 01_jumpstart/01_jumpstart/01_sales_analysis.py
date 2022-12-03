@@ -5,7 +5,7 @@
 #   1. Select a Python Interpreter: ds4b_101p
 #   2. Delete terminals to start a fresh Python Terminal session
 
-# 1.0 Load Libraries ----
+# 1.0 Load Libraries 
 
 # Core Python Data Analysis
 import pandas as pd
@@ -23,10 +23,11 @@ from plotnine import (
     )
 
 from mizani.breaks import date_breaks
+
 from mizani.formatters import date_format, currency_format
 
 # Misc
-from os import mkdir
+from os import mkdir, getcwd
 from rich import pretty
 pretty.install()
 
@@ -34,11 +35,22 @@ pretty.install()
 
 # help(pd.read_excel)
 # - Use "q" to quit
+bikes_df = pd.read_excel("00_data_raw/bikes.xlsx")
 
+bikes_df
 
+bikeshops_df = pd.read_excel("./00_data_raw/bikeshops.xlsx")
 
+bikeshops_df
 
+orderlines_df = pd.read_excel(
+   io         =  "./00_data_raw/orderlines.xlsx",
+   converters = {'order.date': str}
+    )
 
+orderlines_df
+
+orderlines_df.info()
 # 3.0 Examining Data ----
 
 

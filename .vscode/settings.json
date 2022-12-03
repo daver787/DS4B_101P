@@ -1,2 +1,5 @@
 {
+    "jupyter.sendSelectionToInteractiveWindow": true,
+    "jupyter.notebookFileRoot": "${workspaceFolder}"
+
 }
