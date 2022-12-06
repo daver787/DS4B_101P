@@ -85,39 +85,80 @@ bike_orderlines_joined_df = orderlines_df\
         right_on  = 'bikeshop.id'
     )            
 
+bike_orderlines_joined_df
+
 # 5.0 Wrangling Data ----
 
 # * No copy
 
+df = bike_orderlines_joined_df
 
 # * Copy
 
+df2 = bike_orderlines_joined_df.copy()
 
+df
+df2
 
 # * Handle Dates
 
+df['order.date']
+
+df['order.date'] = pd.to_datetime(df['order.date'])
+
+df.info()
 
 # * Show Effect: Copy vs No Copy
 
+bike_orderlines_joined_df.info()
 
 # * Text Columns
 
+df.description
+
+df.location
+
+df.T
 
 # * Splitting Description into category_1, category_2, and frame_material
+"Mountain - Over Mountain - Carbon".split(" - ")
 
+temp_df  = df['description'].str.split(pat = ' - ', expand = True)
 
+df['category.1']     = temp_df[0]
+df['category.2']     = temp_df[1]
+df['frame.material'] = temp_df[2]
 
 # * Splitting Location into City and State
 
-
+temp_df = df['location'].str.split(', ',  expand = True)
+df['city']  = temp_df[0]
+df['state'] = temp_df[1]
 # * Price Extended
 
+df['total.price'] = df['quantity'] * df['price']
+df.sort_values('total.price', ascending = False)
 
 # * Reorganizing
-
-
+cols_to_keep_list = [
+   'order.id', 
+   'order.line',
+   'order.date',
+   'model',
+   'quantity', 
+   'price',
+   'total.price',
+   'bikeshop.name', 
+   'location',
+   'category.1',
+   'category.2',
+   'frame.material',
+   'city',
+   'state'   
+]
 # * Renaming columns
 
+df = df[cols_to_keep_list]
 
 # 6.0 Visualizing a Time Series ----
 
