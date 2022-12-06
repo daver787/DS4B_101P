@@ -156,15 +156,33 @@ cols_to_keep_list = [
    'city',
    'state'   
 ]
+df = df[cols_to_keep_list]
+
 # * Renaming columns
 
-df = df[cols_to_keep_list]
+'order.date'.replace('.','_')
+
+df.columns = df.columns.str.replace(".","_")
+
+bike_orderlines_wrangled_df = df
+
+bike_orderlines_wrangled_df
 
 # 6.0 Visualizing a Time Series ----
 
+mkdir('00_data_wrangled')
+
+bike_orderlines_wrangled_df.to_pickle(path = '00_data_wrangled/bike_orderlines_wrangled_df.pkl')
+
+df = pd.read_pickle('00_data_wrangled/bike_orderlines_wrangled_df.pkl')
 
 # 6.1 Total Sales by Month ----
 
+df = pd.DataFrame(df)
+
+df['order_date']
+
+df['order_date'].dt.year
 
 # Quick Plot ----
 
