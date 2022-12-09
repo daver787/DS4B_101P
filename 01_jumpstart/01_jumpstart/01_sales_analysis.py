@@ -275,12 +275,15 @@ ggplot(
 
 # Pickle ----
 
+df.to_pickle("00_data_wrangled/bike_orderlines_wrangled_df.pkl")
 
 # CSV ----
 
+df.to_csv("00_data_wrangled/bike_orderlines_wrangled_df.csv")
 
 # Excel ----
 
+df.to_excel("00_data_wrangled/bike_orderlines_wrangled_df.xlsx")
 
 # WHERE WE'RE GOING
 # - Building a forecast system
