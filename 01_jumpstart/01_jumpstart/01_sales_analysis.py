@@ -20,7 +20,8 @@ from plotnine import (
     scale_y_continuous, scale_x_datetime,
     labs,
     theme, theme_minimal, theme_matplotlib,
-    expand_limits
+    expand_limits,
+    element_text
     )
 
 from mizani.breaks import date_breaks
@@ -221,16 +222,53 @@ ggplot(aes(x = 'order_date', y = 'total_price'), data = sales_by_month_df) + \
 
 # ** Step 1 - Manipulate ----
 
+sales_by_month_cat_2 = df[['category_2', 'order_date', 'total_price']] \
+    .set_index('order_date') \
+    .groupby('category_2') \
+    .resample('W') \
+    .agg(func = {'total_price':np.sum}) \
+    .reset_index()       
+
+sales_by_month_cat_2 
 
 # Step 2 - Visualize ----
 
-
 # Simple Plot
 
+sales_by_month_cat_2 \
+    .pivot(
+        index   = 'order_date',
+        columns = 'category_2',
+        values  = 'total_price'        
+    ) \
+    .fillna(0) \
+    .plot(kind = "line", subplots = True, layout = (3,3) )        
 
 # Reporting Plot
 
-
+ggplot(
+    mapping = aes(x = 'order_date', y = 'total_price'),
+    data    = sales_by_month_cat_2
+    ) + \
+    geom_line(color ='#2c3e50') + \
+    geom_smooth(method = 'lm', se = False, color ='blue') + \
+    facet_wrap(
+        facets = 'category_2',
+        ncol   = 3,
+        scales = "free_y"
+    ) + \
+    scale_y_continuous(labels = usd) + \
+    scale_x_datetime(breaks = date_breaks("2 years"),
+                     labels = date_format(fmt = "%Y-%m"))+ \
+    labs(title = "Revenue by Week",
+         x     = "",
+         y     = "Revenue") + \
+    theme_matplotlib() + \
+    theme(
+        subplots_adjust = {'wspace' : 0.35},
+        axis_text_y     = element_text(size = 6),
+        axis_text_x     = element_text(size = 6) )        
+                     
 
 # 7.0 Writing Files ----
 
