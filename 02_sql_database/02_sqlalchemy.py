@@ -44,11 +44,25 @@ conn.close()
 
 # Connecting is the same as creating
 
+sql.create_engine("sqlite:///00_database/bike_orders_database.sqlite")
+
+conn = engine.connect()
 
 # GETTING DATA FROM THE DATABASE
 
 # Get the table names
 
+engine.table_names()
+
+inspector = sql.inspect(conn)
+
+inspector.get_schema_names()
+
+inspector.get_table_names('main')
 
 # Read the data
+table = inspector.get_table_names()
 
+pd.read_sql(f"SELECT * FROM {table[1]}", con = conn)
+
+conn.close()
