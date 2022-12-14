@@ -1,15 +1,11 @@
-# DS4B 101-P: PYTHON FOR DATA SCIENCE AUTOMATION ----
-# SQL DATABASES (Module 2): Working with SQLAlchemy ----
+
 
 # IMPORTS ----
-import pandas as pd
-import sqlalchemy as sql
-# FUNCTION DEFINITION ----
-def my_function(a =1):
-    b = 1
-    return a + b
-my_function(a = 3)
 
+import sqlalchemy as sql
+import pandas as pd
+
+# COLLECT DATA ----
 def collect_data(conn_string = "sqlite:///00_database/bike_orders_database.sqlite"):
     """
     Collects and combines the bike orders data.
@@ -83,5 +79,3 @@ def collect_data(conn_string = "sqlite:///00_database/bike_orders_database.sqlit
     df.columns = df.columns.str.replace(".", "_")
 
     return df
-
-collect_data()
