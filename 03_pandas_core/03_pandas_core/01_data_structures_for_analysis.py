@@ -60,21 +60,70 @@ df['price'].values.dtype
 # 3.0 DATA STRUCTURES - PYTHON
 
 # Dictionaries
+d = {'a': 1}
 
+type(d)
 
+d.keys()
+
+d.values()
+
+d['a']
 
 # Lists
 
+l = [1, "A", [2, "B"]]
+l[0]
+l[1]
+l[2]
 
+list(d.values())[0]
 
 # Tuples
 
+type(df.shape).mro()
+
+t = (10,20)
+
+t[0] = 20
 
 # Base Data Types
 
+type(1.5).mro()
 
+type(1).mro()
 
+df.total_price.values
+
+type(df['model'].values[0])
+
+type("Jekyll Carbon 2")
 
 # Casting
 
+model = "Jekyll Carbon 2"
+price = 6070
 
+f"The first model is:{model}"
+
+f"The price of the first model: {price}"
+
+str(price) + " Some Text"
+
+str(1.0)
+
+int("50%".replace("%",""))
+
+# Go from low Level to High Level through Casting
+
+type(range(1,50)).mro()
+
+r = list(range(0,51))
+
+np.array(r)
+
+pd.Series(r).to_frame()
+
+# Converting Column data types
+
+df['order_date'].astype('str').str.replace("-","/")

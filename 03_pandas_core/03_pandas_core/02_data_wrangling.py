@@ -2,12 +2,17 @@
 # Week 2 (Data Wrangling): Data Wrangling ----
 
 # IMPORTS
-
+import pandas as pd
+import numpy as np
+import matplotlib,pyplot as plt
 
 
 # DATA
 
+from my_pandas_extensions.database import collect_data
 
+df = collect_data()
+df
 
 # 1.0 SELECTING COLUMNS
 
