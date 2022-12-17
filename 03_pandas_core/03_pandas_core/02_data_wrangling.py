@@ -4,7 +4,7 @@
 # IMPORTS
 import pandas as pd
 import numpy as np
-import matplotlib,pyplot as plt
+import matplotlib.pyplot as plt
 
 
 # DATA
@@ -18,18 +18,56 @@ df
 
 # Select by name
 
+df[['order_date','order_id','order_line']]
+
+df['order_date']
+df[['order_date']]
 
 # Select by position
+
+df.iloc[:, 0:3]
+
+df.iloc[:, -3:]
 
 
 # Select by text matching
 
+df.filter(regex = "(^model)|(^cat)", axis = 1)
+
+df.filter(regex = "price$", axis = 1)
+
+df.filter(regex = "(price$)|(date$)", axis = 1)
 
 # Rearranging columns
+#Single
+l = df.columns.to_list()
 
+l.remove('model')
+
+['model', *l]
+
+df[['model', *l]]
 
 # Select by data types
+# Multiple Columns
+l = df.columns.to_list()
+l.remove('model')
+l.remove('category_1')
+l.remove('category_2')
 
+df[['model', 'category_1', 'category_2', *l]]
+
+
+# - List Comprehension
+
+l = df.columns.to_list()
+l
+
+cols_to_front = ['model', 'category_1', 'category_2']
+
+l2 = [col for col in l if col not in cols_to_front]
+
+df[[*cols_to_front, *l2]]
 
 # Dropping Columns (De-selecting)
 
