@@ -125,22 +125,51 @@ df.query(f"price >= {price_threshold_1}")
 
 # Filtering Items in a List
 
+df['category_2'].unique()
+
+df['category_2'].value_counts()
+
+df[df['category_2'].isin(['Triathlon','Over Mountain'])]
+
+df[~df['category_2'].isin(['Triathlon','Over Mountain'])]
 
 # Slicing
+
+df[:5]
+
+df.head(5)
+
+df.tail(5)
 
 
 # Index Slicing
 
+df.iloc[0:5, [1, 3, 5]]
+
+df.iloc[0:5]
+
+df.iloc[:, [1, 3, 5]]
 
 # Unique / Distinct Values
 
+df[['model', 'category_1', 'category_2', 'frame_material']]\
+    .drop_duplicates()
+
+df['model'].unique()
 
 # Top / Bottom
 
+df.nlargest(n = 20, columns = 'total_price')
+
+df['total_price'].nlargest(n = 20)
+
+df.nsmallest(n = 20, columns = 'total_price')
 
 # Sampling Rows
 
+df.sample(n = 10, random_state = 123)
 
+df.sample(frac = 0.10, random_state = 123)
 
 # 4.0 ADDING CALCULATED COLUMNS (MUTATING) ----
 
