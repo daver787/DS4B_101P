@@ -176,11 +176,25 @@ df.sample(frac = 0.10, random_state = 123)
 
 # Method 1 - Series Notations
 
+df2 = df.copy()
 
+df2['new_col'] = df2['price'] * df2['quantity']
+
+df2['new_col_2'] = df2['model'].str.lower()
+
+df2
 # Method 2 - assign (Great for method chaining)
 
+df.assign(frame_material = lambda x:x['frame_material'].str.lower())
 
+df.assign(frame_material_lower = lambda x: x['frame_material'].str.lower())
 
+df[['model','price']] \
+    .drop_duplicates() \
+    .assign(price = lambda x: np.log(x['price']))\
+    .set_index('model') \
+    .plot(kind = 'hist')     
+                
 # Adding Flags (True/False)
 
 
