@@ -197,9 +197,41 @@ df[['model','price']] \
                 
 # Adding Flags (True/False)
 
+"Supersix Evo Hi Mod Team".lower().find("supersix") >= 0
+"Beast of the East 1".lower().find("supersix") >= 0
+
+df['model'].str.lower().str.contains("supersix")
+
+df.assign(flag_supersix = lambda x: x['model'].str.lower().str.contains("supersix"))
 
 
 # Binning
+
+pd.cut(df.price, bins = 3, labels = ['low', 'medium', 'high']).astype("str")
+
+df[['model','price']]\
+    .drop_duplicates()\
+    .assign(price_group = lambda x: pd.cut(x['price'], bins = 3))\
+    .pivot(
+        index   = 'model',
+        columns = 'price_group',
+        values   = 'price'
+    )\
+    .style.background_gradient(cmap = "Blues")     
+    
+pd.qcut(df.price, q = [0, 0.33, 0.66, 1], labels = ['low', 'medium', 'high'])         
+
+df[['model','price']]\
+    .drop_duplicates()\
+    .assign(price_group = lambda x: pd.qcut(x['price'], q = 3))\
+    .pivot(
+        index   = 'model',
+        columns = 'price_group',
+        values   = 'price'
+    )\
+    .style.background_gradient(cmap = "Blues")     
+
+
 
 
 
