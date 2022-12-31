@@ -204,7 +204,6 @@ df['model'].str.lower().str.contains("supersix")
 
 df.assign(flag_supersix = lambda x: x['model'].str.lower().str.contains("supersix"))
 
-
 # Binning
 
 pd.cut(df.price, bins = 3, labels = ['low', 'medium', 'high']).astype("str")
@@ -231,19 +230,57 @@ df[['model','price']]\
     )\
     .style.background_gradient(cmap = "Blues")     
 
-
-
-
-
 # 5.0 GROUPING  ----
 
 # 5.1 Aggregations (No Grouping)
 
+df.sum()
+
+df[['total_price']].sum().to_frame()
+
+df\
+    .select_dtypes(exclude = ['object']) \
+    .drop('order_date', axis = 1) \
+    .sum()       
+
+df.sum()
+df.agg(np.sum)
+
+df.agg([np.sum, np.mean, np.std])
+
+df.agg(
+    {
+        'quantity'  : np.sum,
+        'total_price': [np.sum, np.mean]
+    }
+)
 
 # Common Summaries
 
+df['model'].value_counts()
+
+df[['model', 'category_1']].value_counts()
+
+df.nunique()
+
+df.isna().sum()
+
+df.std()
+
+df.aggregate([np.mean, np.std])
 
 # 5.2 Groupby + Agg
+
+df.groupby(['city', 'state']).sum()
+
+df\
+    .groupby(['city', 'state'])\
+    .agg(
+        dict(
+            quantity       = np.sum,
+            total_price    = [np.sum, np.mean]
+            )
+        )
 
 
 # Get the sum and median by groups
