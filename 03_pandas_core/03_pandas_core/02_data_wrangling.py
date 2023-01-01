@@ -285,20 +285,58 @@ df\
 
 # Get the sum and median by groups
 
+summary_df_1 = df[['category_1', 'category_2', 'total_price']] \
+    .groupby(['category_1', 'category_2']) \
+    .agg([np.sum, np.median]) \
+    .reset_index()       
+
+summary_df_1
 
 # Apply Summary Functions to Specific Columns
 
+summary_df_2 = df[['category_1', 'category_2', 'total_price', 'quantity']] \
+    .groupby(['category_1', 'category_2']) \
+    .agg(
+        {
+            'quantity'   : np.sum,
+            'total_price': np.sum
+        }
+    ) \
+    .reset_index()       
+
+summary_df_2
 
 # Detecting NA
 
+summary_df_1.columns
 
-# 5.3 Groupby + Transform 
+summary_df_1.isna().sum()
+
+# 5.3 Groupby + Transform (Apply)
 # - Note: Groupby + Assign does not work. No assign method for groups.
 
+summary_df_3 = df[['category_2', 'order_date', 'total_price', 'quantity']] \
+    .set_index('order_date')\
+    .groupby('category_2')\
+    .resample("W")\
+    .agg(np.sum)\
+    .reset_index()    
+    
+summary_df_3           
 
 # 5.4 Groupby + Filter
 
-
+summary_df_3\
+    .set_index('order_date')\
+    .groupby('category_2')\
+    .apply(lambda x: (x.total_price - x.total_price.mean()) / x.total_price.std())\
+    .reset_index()\
+    .pivot(
+        index   = 'order_date',
+        columns = 'category_2',
+        values  = 'total_price'
+    )\
+    .plot()               
 
 
 # 6.0 RENAMING ----
