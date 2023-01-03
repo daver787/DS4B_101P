@@ -322,9 +322,7 @@ summary_df_3 = df[['category_2', 'order_date', 'total_price', 'quantity']] \
     .agg(np.sum)\
     .reset_index()    
     
-summary_df_3           
-
-# 5.4 Groupby + Filter
+summary_df_3  
 
 summary_df_3\
     .set_index('order_date')\
@@ -339,17 +337,40 @@ summary_df_3\
     .plot()               
 
 
+summary_df_3 \
+    .set_index(['order_date', 'category_2'])\
+    .groupby('category_2')\
+    .apply(lambda x: (x-x.mean()) / x.std())        
+         
+
+# 5.4 Groupby + Filter
+
+df.tail(5)
+
+summary_df_3\
+    .groupby('category_2')\
+    .tail(5)    
+
+summary_df_3\
+    .groupby('category_2')\
+    .apply(lambda x: x.iloc[:20])    
 # 6.0 RENAMING ----
 
 # Single Index
 
+summary_df_2\
+    .rename(columns =dict(category_1 = "Category 1"))
+ 
+summary_df_2.columns.str.replace("_" , " ").str.title()   
+
+summary_df_2 \
+    .rename(columns = lambda x: x.replace("_", " ").title())    
 
 # Targeting specific columns
 
+summary_df_2.rename(columns = {"total_price":"Revenue"})
 
 # - Mult-Index
-
-
 
 # 7.0 RESHAPING (MELT & PIVOT_TABLE) ----
 
