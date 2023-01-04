@@ -372,10 +372,29 @@ summary_df_2.rename(columns = {"total_price":"Revenue"})
 
 # - Mult-Index
 
+summary_df_1.columns
+"_".join(('total_price', 'median'))
+
+["_".join(col).rstrip("_") for col in summary_df_1.columns.to_list()]
+
+summary_df_1\
+    .set_axis(
+        ["_".join(col).rstrip("_") for col in summary_df_1.columns.to_list()],
+        axis = 1
+        )
+
 # 7.0 RESHAPING (MELT & PIVOT_TABLE) ----
 
 # Aggregate Revenue by Bikeshop by Category 1 
 
+bikeshop_revenue_df = df[['bikeshop_name', 'category_1', 'total_price']] \
+    .groupby(['bikeshop_name', 'category_1']) \
+    .sum() \
+    .reset_index() \
+    .sort_values('total_price' ,ascending = False) \
+    .rename(columns = lambda x: x.replace("_"," ").title())    
+    
+bikeshop_revenue_df              
 
 # 7.1 Pivot & Melt 
 
