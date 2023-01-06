@@ -400,11 +400,54 @@ bikeshop_revenue_df
 
 # Pivot (Pivot Wider)
 
+bikeshop_revenue_wide_df = bikeshop_revenue_df\
+    .pivot(
+        index    = ['Bikeshop Name'],
+        columns  = ['Category 1'],
+        values   = ['Total Price']
+    )\
+    .reset_index()\
+    .set_axis(
+        ['Bikeshop Name', 'Mountain', 'Road'],
+        axis = 1
+    )        
+
+bikeshop_revenue_wide_df\
+    .sort_values('Mountain')\
+    .plot(
+    x = 'Bikeshop Name',
+    y = ['Mountain', 'Road'],
+    kind ='barh'
+)
+
+
+from mizani.formatters import dollar_format
+
+usd = dollar_format(prefix ='$', digits = 0, big_mark =',')
+
+bikeshop_revenue_wide_df\
+    .sort_values('Mountain', ascending = False)\
+    .style\
+    .highlight_max()\
+    .format(
+        {
+            'Mountain': lambda x: usd([x])[0],
+            'Road':lambda x: usd([x])[0]
+        }
+    )\
+    .to_excel("03_pandas_core/bikeshops_revenue_wide.xlsx")                
 
 # Melt (Pivoting Longer)
 
-
-
+pd.read_excel("03_pandas_core/bikeshops_revenue_wide.xlsx")\
+    .iloc[:,1:]\
+    .melt(
+        value_vars = ['Mountain', 'Road'],
+        var_name   = 'Category_1',
+        value_name = 'Revenue',
+        id_vars    = 'Bikeshop Name'
+    )\
+    .info()    
 # 7.2 Pivot Table (Pivot + Summarization, Excel Pivot Table)
 
 
