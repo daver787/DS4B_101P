@@ -439,17 +439,77 @@ bikeshop_revenue_wide_df\
 
 # Melt (Pivoting Longer)
 
-pd.read_excel("03_pandas_core/bikeshops_revenue_wide.xlsx")\
+bikeshop_revenue_long_df = pd.read_excel("03_pandas_core/bikeshops_revenue_wide.xlsx")\
     .iloc[:,1:]\
     .melt(
         value_vars = ['Mountain', 'Road'],
-        var_name   = 'Category_1',
+        var_name   = 'Category 1',
         value_name = 'Revenue',
         id_vars    = 'Bikeshop Name'
-    )\
-    .info()    
+    ) 
+    
+bikeshop_order = bikeshop_revenue_long_df \
+    .groupby("Bikeshop Name")\
+    .sum()\
+    .sort_values("Revenue")\
+    .index\
+    .to_list()        
+    
+        
+from plotnine import (
+    ggplot, aes, geom_col, facet_wrap,
+    theme_minimal, coord_flip  
+)  
+
+bikeshop_revenue_long_df["Bikeshop Name"] = pd.Categorical(bikeshop_revenue_long_df['Bikeshop Name'],
+                                                           categories = bikeshop_order)
+
+bikeshop_revenue_long_df.info()
+
+ggplot(
+    mapping = aes(x = "Bikeshop Name", y = "Revenue", fill = "Category 1"),
+    data    = bikeshop_revenue_long_df
+      ) + \
+    geom_col() +\
+    coord_flip() +\
+    facet_wrap("Category 1")+\
+    theme_minimal()       
+         
 # 7.2 Pivot Table (Pivot + Summarization, Excel Pivot Table)
 
+df\
+    .pivot_table(
+       columns = None,
+       values  = "total_price" ,
+       index   = "category_1",
+       aggfunc = np.sum
+    )
+
+
+df\
+    .pivot_table(
+       columns = "frame_material",
+       values  = "total_price" ,
+       index   = "category_1",
+       aggfunc = np.sum
+    )
+
+df\
+    .pivot_table(
+       columns = None,
+       values  = "total_price" ,
+       index   = ["category_1", "frame_material"],
+       aggfunc = np.sum
+    )
+
+df\
+    .assign(year = lambda x: x.order_date.dt.year)\
+    .pivot_table(
+        columns   = "year",
+        aggfunc = np.sum,
+        index = ["category_1", "category_2"],
+        values  = "total_price"
+    )    
 
 
 # 7.3 Stack & Unstack ----
