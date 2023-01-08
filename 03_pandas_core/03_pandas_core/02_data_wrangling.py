@@ -502,7 +502,7 @@ df\
        aggfunc = np.sum
     )
 
-df\
+sales_by_cat1_cat2_year_df =df\
     .assign(year = lambda x: x.order_date.dt.year)\
     .pivot_table(
         columns   = "year",
@@ -516,21 +516,57 @@ df\
 
 # Unstack - Pivots Wider 1 Level (Pivot)
 
+sales_by_cat1_cat2_year_df\
+    .unstack(
+        level      = 0,
+        fill_value = 0
+    )
+
+sales_by_cat1_cat2_year_df\
+    .unstack(
+        level      = "category_2",
+        fill_value = 0
+    )
+
 # Stack - Pivots Longer 1 Level (Melt)
 
+sales_by_cat1_cat2_year_df\
+    .stack(
+        level      = "year"
+    )\
+    .unstack(
+        level = ['category_1', 'category_2']
+    )    
 
 # 8.0 JOINING DATA ----
 
 
 # Merge (Joining)
 
+orderlines_df = pd.read_excel("00_data_raw/orderlines.xlsx")
+bikes_df      = pd.read_excel("00_data_raw/bikes.xlsx")
+
+pd.merge(
+    left     = orderlines_df,
+    right    = bikes_df,
+    left_on  = "product.id",
+    right_on = "bike.id"
+)
 
 # Concatenate (Binding)
 
-# Columns 
 
+# Columns 
+df_1 =df.iloc[:,:5]
+df_2 = df.iloc[:-5:]
+
+pd.concat([df_1, df_2], axis = 1)
 
 # Rows 
+df_1 = df.head(5)
+df_2 = df.tail(5)
+
+pd.concat([df_1, df_2], axis = 0)
 
 
 
