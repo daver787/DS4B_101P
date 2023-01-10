@@ -568,20 +568,60 @@ df_2 = df.tail(5)
 
 pd.concat([df_1, df_2], axis = 0)
 
-
-
 # 9.0 SPLITTING (SEPARATING) COLUMNS AND COMBINING (UNITING) COLUMNS
 
 # Separate
 
+df_2 = df['order_date'].astype('str').str.split("-", expand = True)\
+    .set_axis(["year", "month", "day"], axis = 1)
+
+pd.concat([df, df_2], axis = 1)
 
 # Combine
 
-
+df_2['year'] + '-' + df_2['month'] + '-' + df_2['day']
 
 # 10.0 APPLY 
 # - Apply functions across rows 
 
+sales_cat2_daily_df = df[['category_2', 'order_date', 'total_price']]\
+    .set_index('order_date')\
+    .groupby('category_2')\
+    .resample('D')\
+    .sum()            
+
+sales_cat2_daily_df
+
+np.mean([1, 2, 3]) # Aggregation
+
+np.sqrt([1, 2, 3]) # Transformaation
+
+sales_cat2_daily_df.apply(np.mean)
+
+sales_cat2_daily_df.apply(np.sqrt)
+
+sales_cat2_daily_df.apply(np.mean, result_type = "broadcast")
+
+sales_cat2_daily_df.apply(lambda x: np.repeat(np.mean(x), len(x)))
+
+sales_cat2_daily_df\
+    .groupby("category_2")\
+    .apply(np.mean)    
+    
+    
+sales_cat2_daily_df\
+    .groupby("category_2")\
+    .apply(lambda x: np.repeat(np.mean(x), len(x))) 
+
+
+# Grouped Broadcast -Use Transform    
+sales_cat2_daily_df\
+    .groupby("category_2")\
+    .transform(np.mean)         
+
+sales_cat2_daily_df\
+    .groupby("category_2")\
+    .transform(np.sqrt)   
 
 
 # 11.0 PIPE 
