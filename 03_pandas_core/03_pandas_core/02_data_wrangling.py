@@ -627,7 +627,20 @@ sales_cat2_daily_df\
 # 11.0 PIPE 
 # - Functional programming helper for "data" functions
 
+data = df
 
+def add_columns(data, **kwargs):
+    
+    data_copy = data.copy()
+    
+    data_copy[list(kwargs.keys())] = pd.DataFrame(kwargs)
+    
+    return data_copy
 
+add_columns(df, total_price_2 = df.total_price*2)
 
-
+df\
+    .pipe(add_columns,
+          category_2_lower = df.category_2.str.lower(),
+          category_2_upper = df.category_2.str.upper()
+          )
