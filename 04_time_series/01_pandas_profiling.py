@@ -17,8 +17,14 @@ df
 
 profile = ProfileReport(df = df)
 
+profile
 # Sampling - Big Datasets
 
+df.profile_report()
+
+df.sample(frac = 0.5).profile_report()
+
+df.profile_report(dark_mode = True)
 
 # Pandas Helper
 # ?pd.DataFrame.profile_report
@@ -26,6 +32,7 @@ profile = ProfileReport(df = df)
 
 # Saving Output
 
+df.profile_report().to_file("04_time_series/profile_report.html")
 
 # VSCode Extension - Browser Preview
 
