@@ -25,11 +25,10 @@ pd.to_datetime('2011-01-07').to_period(freq ="W").to_timestamp()
 
 # Accessing elements
 
-df.order_date.dt.month
-df.order_date.dt.month_name()
-
 # Months
 
+df.order_date.dt.month
+df.order_date.dt.month_name()
 
 # Days
 
