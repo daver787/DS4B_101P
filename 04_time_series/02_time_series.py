@@ -15,24 +15,69 @@ df = collect_data()
 
 # 1.0 DATE BASICS
 
+df['order_date']
 
 
 # Conversion
 
+type('2011-01-07')
+pd.to_datetime('2011-01-07').to_period(freq ="W").to_timestamp()
 
 # Accessing elements
+
+df.order_date.dt.month
+df.order_date.dt.month_name()
 
 # Months
 
 
 # Days
 
+df.order_date.dt.day
+df.order_date.dt.day_name()
+
+
+#Year
+df.order_date.dt.year
 
 # DATE MATH
 
+import datetime
+
+today = datetime.date.today()
+
+pd.to_datetime(today + pd.Timedelta("1 day"))
+
+df.order_date + pd.Timedelta("1Y")
+
+df.order_date + pd.Timedelta("30 min")
+
+# Duration
+
+today = datetime.date.today()
+
+one_year_from_today = today + pd.Timedelta("1Y")
+
+(one_year_from_today - today)/pd.Timedelta("1W")
+
+pd.Timedelta(one_year_from_today - today)/np.timedelta64(1,"M")
+
+pd.Timedelta(one_year_from_today - today)/pd.Timedelta("1M")
 
 # DATE SEQUENCES
 
+
+pd.date_range(
+    start   =  pd.to_datetime("2011-01"),
+    periods = 10,
+    freq    = "2D"
+)
+
+pd.date_range(
+    start   =  pd.to_datetime("2011-01"),
+    end     =  pd.to_datetime("2011-12-31"),
+    freq    = "1W"
+)
 
 
 # PERIODS
