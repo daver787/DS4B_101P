@@ -86,19 +86,57 @@ pd.date_range(
 
 # Convert to Time Stamp
 
+df.order_date.dt.to_period(freq = "D")
+
+df.order_date.dt.to_period(freq = "W")
+
+df.order_date.dt.to_period(freq = "M")
+
+df.order_date.dt.to_period(freq = "Q")
+
+df.order_date.dt.to_period(freq = "Y")
+
 # Get the Frequency
 
+df.order_date.dt.to_period(freq = "Q").dt.freq
 
+df.order_date.dt.to_period(freq = "Y").dt.freq
+
+#Conversion to Timestamp
+
+df.order_date.dt.to_period(freq = "M").dt.to_timestamp()
+
+df.order_date.dt.to_period(freq = "Q").dt.to_timestamp()
 
 # TIME-BASED GROUPING (RESAMPLING)
 # - The beginning of our Summarize by Time Function
 
-# Using kind = "timestamp"
+# Single Time Series. Using kind = "timestamp"
 
+bike_sales_m_df = df[['order_date', 'total_price']]\
+    .set_index('order_date')\
+    .resample("M", kind = "period")\
+    .sum()\
+    .reset_index()\
+    .assign(order_date = lambda x: x.order_date.dt.to_timestamp())        
+    
+bike_sales_m_df           
 
-# Using kind = "period"
+# Grouped Time Series. Using kind = "period"
+# We had trouble with overlapping time stamps,
+# which required an extra step to convert to period. 
 
-
+bike_sales_cat2_m_wide_df = df[['category_2', 'order_date', 'total_price']]\
+    .set_index('order_date')\
+    .groupby('category_2')\
+    .resample('M')\
+    .agg(np.sum)\
+    .unstack('category_2')\
+    .reset_index()\
+    .assign(order_date = lambda x: x['order_date'].dt.to_period())\
+    .set_index('order_date')                            
+        
+bike_sales_cat2_m_wide_df
 
 # MEASURING CHANGE
 
