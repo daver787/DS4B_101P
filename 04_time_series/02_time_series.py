@@ -115,10 +115,8 @@ df.order_date.dt.to_period(freq = "Q").dt.to_timestamp()
 
 bike_sales_m_df = df[['order_date', 'total_price']]\
     .set_index('order_date')\
-    .resample("M", kind = "period")\
-    .sum()\
-    .reset_index()\
-    .assign(order_date = lambda x: x.order_date.dt.to_timestamp())        
+    .resample("MS", kind = "timestamp")\
+    .sum()      
     
 bike_sales_m_df           
 
@@ -144,17 +142,41 @@ bike_sales_cat2_m_wide_df
 
 #  - Single (No Groups)
 
+bike_sales_m_df\
+    .assign(total_price_lag1 = lambda x: x['total_price'].shift(1))\
+    .assign(diff = lambda x: x.total_price - x.total_price_lag1)\
+    .plot(y = 'diff')   
+    
 
+bike_sales_m_df\
+    .apply(lambda x: (x - x.shift(1))/ x.shift(1))
 
 #  - Multiple Groups: Key is to use wide format with apply
 
+bike_sales_cat2_m_wide_df\
+    .apply(lambda x: (x - x.shift(1))/x.shift(1))\
+    .plot()
 
-
+bike_sales_cat2_m_wide_df\
+    .stack("category_2")\
+    .groupby("category_2")\
+    .apply(lambda x : x- x.shift(1))        
 
 #  - Difference from First Timestamp
 
+bike_sales_m_df\
+    .apply(lambda x: (x- x[0])/x[0])\
+    .plot()    
 
 
+bike_sales_cat2_m_wide_df\
+    .apply(lambda x: (x- x[0])/x[0])\
+    .plot()  
+
+bike_sales_cat2_m_wide_df\
+    .stack('category_2')\
+    .groupby('category_2')\
+    .transform(lambda x: x -x[0])        
 
 # CUMULATIVE CALCULATIONS
 
