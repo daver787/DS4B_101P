@@ -180,7 +180,31 @@ bike_sales_cat2_m_wide_df\
 
 # CUMULATIVE CALCULATIONS
 
-
+bike_sales_m_df\
+    .resample("YS")\
+    .sum()\
+    .cumsum()\
+    .reset_index()\
+    .assign(order_date = lambda x: x.order_date.dt.year)\
+    .set_index("order_date")\
+    .plot(kind = "bar")   
+    
+    
+bike_sales_cat2_m_wide_df\
+    .resample("Y")\
+    .sum()\
+    .cumsum()\
+    .plot(kind = "bar", stacked =True)   
+    
+    
+bike_sales_cat2_m_wide_df\
+    .resample("Y")\
+    .agg(np.sum)\
+    .stack("category_2")\
+    .groupby("category_2")\
+    .expanding()\
+    .sum()\
+    .reset_index()                                       
 
 # ROLLING CALCULATIONS
 
