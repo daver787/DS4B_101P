@@ -210,8 +210,46 @@ bike_sales_cat2_m_wide_df\
 
 # Single
 
+bike_sales_m_df.plot()
+
+bike_sales_m_df['total_price']\
+    .rolling(
+        window =12
+    )\
+    .mean()    
+
+
+bike_sales_m_df\
+    .assign(
+        total_price_roll_12 = lambda x: x['total_price'].rolling(
+            window      = 24,
+            center      = True,
+            min_periods = 1
+        )\
+        .mean()    
+    )\
+    .plot()    
+
+
 # Groups - Can't use assign(), we'll use merging
 
-
+bike_sales_cat2_m_wide_df\
+    .apply(
+        lambda x: x.rolling(
+            window = 24,
+            center = True,
+            min_periods = 1
+        )\
+        .mean()       
+    )\
+    .rename(lambda x: x + "_roll_24", axis = 1)\
+    .merge(
+        bike_sales_cat2_m_wide_df,
+        how         = "right",
+        left_index  = True,
+        right_index = True
+    )\
+    .plot().get_legend().set_visible(False)   
+     
 
 
