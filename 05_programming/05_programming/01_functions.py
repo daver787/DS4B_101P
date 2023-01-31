@@ -52,11 +52,32 @@ pd.DataFrame.aggregate(
 x = df['total_price']
 
 
-def detect_outliers(x):
+def detect_outliers(x, iqr_mutiplier = 1.5, how = "both"):
     
-    return x
+    # IQR LOGIC
+    
+    q75 = np.quantile(x, 0.75)
+    q25 = np.quantile(x, 0.25)
+    iqr = q75 - q25
+    
+    lower_limit = q25 - iqr_mutiplier * iqr
+    upper_limit = q75 + iqr_mutiplier * iqr
+    
+    outliers_upper = x >= upper_limit
+    outliers_lower  = x <= lower_limit
+    
+    if how == "both":
+        outliers = outliers_upper | outliers_lower
+    elif how == "lower":
+        outliers = outliers_lower
+    else:
+        outliers = outliers_upper        
+    
+    return outliers
 
-detect_outliers(x)
+detect_outliers(df['total_price'], iqr_mutiplier= 0.9, how = "lower")
+
+df[detect_outliers(df['total_price'], iqr_mutiplier= 0.3, how = "lower")]
 
 # 3.0 EXTENDING A CLASS ----
 
