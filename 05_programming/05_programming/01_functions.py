@@ -51,19 +51,38 @@ pd.DataFrame.aggregate(
 
 x = df['total_price']
 
+iqr_multiplier =-5
 
-def detect_outliers(x, iqr_mutiplier = 1.5, how = "both"):
+
+def detect_outliers(x, iqr_multiplier = 1.5, how = "both"):
     
+    # CHECKS
+    if type(x) is not pd.Series:
+        raise Exception("`x` must be a Pandas Series")
+    
+    
+    if not isinstance(iqr_multiplier, (float,int)):
+        raise Exception("`iqr_multiplier` must be an int or float")
+    if iqr_multiplier <= 0:
+        raise Exception("`iqr_multiplier` must be a positive value")
+    
+    how_options = ['both','upper','lower']
+    
+    if how not in how_options:
+        raise Exception(
+            f"Invalid `how`. Expected one of {how_options} "
+        )
+           
     # IQR LOGIC
     
     q75 = np.quantile(x, 0.75)
     q25 = np.quantile(x, 0.25)
     iqr = q75 - q25
     
-    lower_limit = q25 - iqr_mutiplier * iqr
-    upper_limit = q75 + iqr_mutiplier * iqr
+    lower_limit = q25 - iqr_multiplier * iqr
+    upper_limit = q75 + iqr_multiplier * iqr
     
-    outliers_upper = x >= upper_limit
+    outliers_upper  = x >= upper_limit
     outliers_lower  = x <= lower_limit
     
     if how == "both":
@@ -75,9 +94,17 @@ def detect_outliers(x, iqr_mutiplier = 1.5, how = "both"):
     
     return outliers
 
-detect_outliers(df['total_price'], iqr_mutiplier= 0.9, how = "lower")
+detect_outliers(df['total_price'], iqr_multiplier= 0.9, how = "lower")
 
-df[detect_outliers(df['total_price'], iqr_mutiplier= 0.3, how = "lower")]
+df[detect_outliers(df['total_price'], iqr_multiplier= 0.3, how = "lower")]
+
+detect_outliers(1)
+
+df[detect_outliers(df['total_price'], iqr_multiplier= 'abc', how = "lower")]
+
+df[detect_outliers(df['total_price'], iqr_multiplier= -5, how = "lower")]
+
+df[detect_outliers(df['total_price'], iqr_multiplier= 1, how = "abc")]
 
 # 3.0 EXTENDING A CLASS ----
 
