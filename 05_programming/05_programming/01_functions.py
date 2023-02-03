@@ -55,7 +55,26 @@ iqr_multiplier =-5
 
 
 def detect_outliers(x, iqr_multiplier = 1.5, how = "both"):
+    """
     
+    Used to detect outliers using the 1.5 IQR(Inner Quartile Range) Method.
+
+    Args:
+        x (Pandas Series):
+            A numeric pandas series
+        iqr_multiplier (float, optional):
+            A multiplier used to modify the sensitivity. 
+            Must be positive.Lower values will add more outliers.
+            Larger values will add fewer outliers.Defaults to 1.5.
+        how (str, optional): 
+            One of  "both", "upper" or "lower".Defaults to "both".
+            -"both": flags both upper and lower outliers.
+            -"lower": flags lower outliers only.
+            -"upper":flags upper outliers only.
+
+    Returns:
+        [Pandas Series]: A Boolean Series that flags outliers as true or false.
+    """
     # CHECKS
     if type(x) is not pd.Series:
         raise Exception("`x` must be a Pandas Series")
@@ -106,5 +125,25 @@ df[detect_outliers(df['total_price'], iqr_multiplier= -5, how = "lower")]
 
 df[detect_outliers(df['total_price'], iqr_multiplier= 1, how = "abc")]
 
+#Groupby Example
+
+df\
+    .groupby("category_2")\
+    .apply(
+        lambda x: x[
+            detect_outliers(
+            x              = x['total_price'],
+            iqr_multiplier = 1.5,
+            how            = "upper"        
+        )        
+                    ]
+    )    
+
+
 # 3.0 EXTENDING A CLASS ----
 
+pd.Series.detect_outliers = detect_outliers
+
+df['total_price'].detect_outliers()
+
+# ?pd.Series.detect_outliers
