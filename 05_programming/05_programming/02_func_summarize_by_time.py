@@ -36,6 +36,8 @@ def summarize_by_time(
                       *args,
                       **kwargs):
     # CHECKS
+    if type(value_column) is not list:
+        value_column = [value_column]
     
     # BODY
     
@@ -53,9 +55,12 @@ def summarize_by_time(
         
     )
     # Handle the aggregration
-    data = data[[value_column]]\
+    function_list = [agg_func] * len(value_column)
+    agg_dict      = dict(zip(value_column, function_list))
+
+    data = data\
         .agg(
-        func = agg_func,
+        func = agg_dict,
         *args,
         **kwargs
     )    
@@ -65,14 +70,12 @@ def summarize_by_time(
 summarize_by_time(
     data, 
     date_column  = 'order_date',
-    value_column = 'total_price',
-    #groups       = ['category_1', 'category_2'],
+    value_column = ['total_price','quantity'],
+    groups       = ['category_1', 'category_2'],
     rule         = 'M',
-    kind         = 'period'
+    kind         = 'period',
+    agg_func     = [np.sum, np.mean]
     )
-
-
-
 
 # ADDING TO OUR TIME SERIES MODULE
 
