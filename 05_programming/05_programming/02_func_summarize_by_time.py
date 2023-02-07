@@ -29,10 +29,12 @@ df[['category_2', 'order_date', 'total_price']] \
 # BUILDING SUMMARIZE BY TIME
 def summarize_by_time(
     data, date_column,value_column,
-                      groups   = None,
-                      rule     = 'D',
-                      agg_func = np.sum,
-                      kind     = 'timestamp',
+                      groups      = None,
+                      rule        = 'D',
+                      agg_func    = np.sum,
+                      kind        = 'timestamp',
+                      wide_format = True,
+                      fillna      = 0,
                       *args,
                       **kwargs):
     # CHECKS
@@ -63,18 +65,30 @@ def summarize_by_time(
         func = agg_dict,
         *args,
         **kwargs
-    )    
+    ) 
+    
+    # Handle Pivot Wider
+    if wide_format:
+        if groups is not None:
+            data = data.unstack(groups)
+            if (kind == "period"):
+                data.index = data.index.to_period()
+                
+    data = data.fillna(value = fillna)         
+           
     
     return data
     
 summarize_by_time(
-    data, 
+    data         = df, 
     date_column  = 'order_date',
-    value_column = ['total_price','quantity'],
+    value_column = 'total_price',
     groups       = ['category_1', 'category_2'],
     rule         = 'M',
     kind         = 'period',
-    agg_func     = [np.sum, np.mean]
+    agg_func     = np.sum,
+    wide_format  = True,
+    fillna       = 0
     )
 
 # ADDING TO OUR TIME SERIES MODULE
