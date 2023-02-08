@@ -1,31 +1,8 @@
-# DS4B 101-P: PYTHON FOR DATA SCIENCE AUTOMATION ----
-# Module 5 (Programming): Functions ----
-
-# Imports
-
 import pandas as pd
 import numpy as np
+import pandas_flavor as pf
 
-from my_pandas_extensions.database import collect_data
-
-df = collect_data()
-
-# WHAT WE WANT TO STREAMLINE
-
-rule ='D'
-data = df
-
-df[['category_2', 'order_date', 'total_price']] \
-    .set_index('order_date') \
-    .groupby('category_2') \
-    .resample(rule, kind = 'period') \
-    .agg(np.sum) \
-    .unstack("category_2") \
-    .reset_index() \
-    .assign(order_date = lambda x: x['order_date'].dt.to_period()) \
-    .set_index("order_date")
-
-# BUILDING SUMMARIZE BY TIME
+@pf.register_dataframe_method
 def summarize_by_time(
     data, date_column,value_column,
                       groups      = None,
@@ -114,55 +91,3 @@ def summarize_by_time(
            
     
     return data
-    
-summarize_by_time(
-    data         = df, 
-    date_column  = 'order_date',
-    value_column = 'total_price',
-    groups       = ['category_1', 'category_2'],
-    rule         = 'M',
-    kind         = 'period',
-    agg_func     = np.sum,
-    wide_format  = True,
-    fillna       = 0
-    )
-
-summarize_by_time("abc", "order_date", "total_price")
-
-#?summarize_by_time
-
-# ADDING TO OUR TIME SERIES MODULE
-
-#pd.DataFrame.summarize_by_time = summarize_by_time
-
-df.summarize_by_time(
-    date_column  = 'order_date',
-    value_column = 'total_price',
-    groups       = ['category_1', 'category_2'],
-    rule         = 'M',
-    kind         = 'period',
-    agg_func     = np.sum,
-    wide_format  = True,
-    fillna       = 0
-    )
-
-# TEST OUT MODULE
-
-import pandas as pd
-import numpy as np
-
-from my_pandas_extensions.database import collect_data
-
-from my_pandas_extensions.timeseries import summarize_by_time
-
-df = collect_data()
-
-df\
-    .summarize_by_time(
-        date_column  = "order_date",
-        value_column = "total_price",
-        groups       = "category_2",
-        rule         = "M",
-        kind         = "period"
-    )\
-    .plot(subplots = True)    
