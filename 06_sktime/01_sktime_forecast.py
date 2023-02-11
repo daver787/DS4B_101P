@@ -79,4 +79,39 @@ plot_series(
 
 # 3.0 MULTIPLE TIME SERIES FORCAST (LOOP) ----
 
+bike_sales_cat2_m_df.head()
+
+df = bike_sales_cat2_m_df
+
+df.columns[0]
+
+df[df.columns[0]]
+
+for col in df.columns:
+    
+    # Series Extraction
+    y = df[col]
+    
+    # Modeling
+    forecaster = AutoARIMA(
+        sp                = 12,
+        suppress_warnings = True
+        )
+    
+    forecaster.fit(y)
+    
+    h = 12
+    
+    predictions, conf_int_df = forecaster.predict(
+        fh              = np.arange(1, h+1),
+        return_pred_int = True,
+        alpha           = 0.05
+        )
+    
+    # Combine into data frame
+    ret = pd.concat([y, predictions, conf_int_df], axis = 1)
+    ret.columns = ["value", "prediction", "ci_low", "ci_hi"]
+    
+    print(ret)
+
 
