@@ -6,6 +6,7 @@
 import pandas as pd
 import numpy as np
 
+#Sktime Imports
 from my_pandas_extensions.database import collect_data
 from my_pandas_extensions.timeseries import summarize_by_time
 
@@ -14,6 +15,9 @@ df = collect_data()
 # Sktime Imports
 from sktime.forecasting.arima import AutoARIMA
 from sktime.utils.plotting import plot_series
+
+#Progress Bars
+from tqdm import tqdm
 
 #?AutoARIMA
 
@@ -87,7 +91,9 @@ df.columns[0]
 
 df[df.columns[0]]
 
-for col in df.columns:
+model_results_dict = {}
+
+for col in tqdm(df.columns):
     
     # Series Extraction
     y = df[col]
@@ -112,6 +118,20 @@ for col in df.columns:
     ret = pd.concat([y, predictions, conf_int_df], axis = 1)
     ret.columns = ["value", "prediction", "ci_low", "ci_hi"]
     
-    print(ret)
+    #Update dictionary
+    model_results_dict[col] = ret
 
+model_results_dict
 
+model_results_df = pd.concat(model_results_dict, axis = 0)
+
+model_results_dict.keys()
+
+model_results_dict[('total_price', 'Cross Country Race')]
+
+# Visualize 
+model_results_dict[('total_price', 'Cross Country Race')].plot()
+
+for key in model_results_dict:
+
+    print(model_results_dict[key])
