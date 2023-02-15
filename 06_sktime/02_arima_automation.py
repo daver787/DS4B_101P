@@ -53,7 +53,7 @@ def arima_forecast(
    #FOR LOOP ----
     model_results_dict ={}
    
-    for col in tqdm(df.columns, min_interval = 0):
+    for col in tqdm(df.columns, mininterval = 0):
        # Series Extraction
        y = df[col]
        
@@ -67,10 +67,30 @@ def arima_forecast(
     
        forecaster.fit(y)
        
+       
        print(forecaster)
  
    #Prediction and Confidence Intervals 
+   
+       predictions, conf_int_df = forecaster.predict(
+        fh              = np.arange(1,h+1),
+        return_pred_int = True,
+        alpha           = alpha
+        )
 
-    return None
+    #Combine into data frame
+       ret = pd.concat([y, predictions, conf_int_df], axis = 1)
+       ret.columns = ["value", "prediction", "ci_low", "ci_hi"]
+       
+     
+     # Update dictionary
+       model_results_dict[col] = ret  
+    
+    # Stack Each Dict Element on Top of Each Other
+    model_results_df = pd.concat(
+        model_results_dict,
+        axis = 0
+        )   
+    return model_results_df
 
 arima_forecast(data, h =12, sp = 12)
