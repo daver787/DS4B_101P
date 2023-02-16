@@ -1,44 +1,16 @@
-# DS4B 101-P: PYTHON FOR DATA SCIENCE AUTOMATION ----
-# Module 6 (Sktime): ARIMA Automation ----
 
 # Imports
 
 import pandas as pd
 import numpy as np
-
-from my_pandas_extensions.database import collect_data
-from my_pandas_extensions.timeseries import summarize_by_time
+import pandas_flavor as pf
 from sktime.forecasting.arima import AutoARIMA
 from tqdm import tqdm
 
 
-# Workflow
-df = collect_data()
-
-bike_sales_m_df = df\
-    .summarize_by_time(
-        date_column  = "order_date",
-        value_column = "total_price",
-        rule         = "M",
-        kind         = "period" 
-    )
-    
-bike_sales_cat2_m_df = df\
-    .summarize_by_time(
-        date_column  = "order_date",
-        value_column = "total_price",
-        groups       = ["category_2"],
-        rule         = "M",
-        kind         ="period"
-    ) 
-
-
-# FUNCTION DEVELOPMENT ----
 # - arima_forecast(): Generates ARIMA forecasts for one or more time series.
 
-
-data = bike_sales_cat2_m_df
-
+@pf.register_dataframe_method
 def arima_forecast(
     data, h = 12, sp = 12, alpha = 0.05,
     suppress_warnings = True,
@@ -103,26 +75,3 @@ def arima_forecast(
     ret = ret.iloc[:, cols_to_keep]
     
     return ret
-
-fcast = arima_forecast(data, h = 12, sp = 12)
-
-arima_forecast(
-    bike_sales_m_df,
-    h  = 12,
-    sp = 1
-)
-
-arima_forecast(
-    bike_sales_cat2_m_df,
-    h = 12,
-    sp =1
-)
-
-from my_pandas_extensions.forecasting import arima_forecast
-
-bike_sales_cat2_m_df\
-    .arima_forecast(
-        h  = 12,
-        sp = 1
-    )
-
