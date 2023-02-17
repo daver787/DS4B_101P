@@ -120,9 +120,13 @@ arima_forecast(
 
 from my_pandas_extensions.forecasting import arima_forecast
 
-bike_sales_cat2_m_df\
+forecast_df = bike_sales_cat2_m_df\
     .arima_forecast(
         h  = 12,
-        sp = 1
+        sp = 12
     )
+    
+forecast_df\
+    .groupby("category_2")\
+    .plot(x = "order_date")        
 

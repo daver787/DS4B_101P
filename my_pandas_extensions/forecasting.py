@@ -16,8 +16,42 @@ def arima_forecast(
     suppress_warnings = True,
     *args, **kwargs
     ):
-   
+    """    Generates ARIMA forecasts for one or more time series.
+    Args:
+        data (Pandas Data Frame): 
+            Data must be in wide format. 
+            Data must have a time-series index 
+            that is a pandas period.
+        h (int): 
+            The forecast horizon
+        sp (int): 
+            The seasonal period
+        alpha (float, optional): 
+            Contols the confidence interval. 
+            alpha = 1 - 95% (CI).
+            Defaults to 0.05.
+        suppress_warnings (bool, optional): 
+            Suppresses ARIMA feedback during automated model training. 
+            Defaults to True.
+        args: Passed to sktime.forecasting.arima.AutoARIMA
+        kwargs: Passed to sktime.forecasting.arima.AutoARIMA
+    Returns:
+        Pandas Data Frame:
+            - A single time series contains columns: value, prediction, ci_lo, and ci_hi
+            - Multiple time series will be returned stacked by group
+    """
    #Checks
+  
+   
+    if (type(h) is not int):
+       raise Exception("`h` must be an integer.")
+   
+    if (type(sp) is not int):
+       raise Exception("`sp` must be an integer.")
+   
+    if (type(data) is not pd.DataFrame):
+        raise Exception("`data` must be a DataFrame")
+   
    
    # Handle inputs ----
     df = data
