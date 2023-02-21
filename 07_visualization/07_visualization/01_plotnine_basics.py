@@ -10,6 +10,8 @@ from my_pandas_extensions.timeseries import summarize_by_time
 from my_pandas_extensions.forecasting import arima_forecast
 
 from plotnine import *
+from mizani.formatters import dollar_format
+
 
 # Data
 
@@ -33,7 +35,7 @@ bike_sales_y_df = df\
 # - Geometries: Add geoms
 # - Format: Add scales, labs, theme
 
-(
+g = (
     # Canvas
     ggplot(
         mapping = aes(x = "order_date", y = "total_price"),
@@ -47,12 +49,33 @@ bike_sales_y_df = df\
         se     = False,
         color  ="dodgerblue"
         )
-    
-    
+    + expand_limits(y = [0, 20e6])
+    + scale_y_continuous(
+        labels = dollar_format(prefix = "$", big_mark="," , digits = 0))
+    + scale_x_datetime(
+        date_labels ="%Y",
+        date_breaks = "2 years"
+    )
+    + labs(
+        title = "Revenue by Year",
+        x = "",
+        y = "Revenue"
+    )
+    +theme_minimal()
 )
+
+g
 
 # Saving a plot ----
 
+g.save("07_visualization/bike_sales_y.jpg")
 
 # What is a plotnine plot? ----
 
+type(g)
+g.data
+g.draw()
+
+m = g.draw()
+
+type(m)

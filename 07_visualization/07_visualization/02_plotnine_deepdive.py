@@ -2,14 +2,22 @@
 # Module 7 (Plotnine): Plotnine Deep-Dive ----
 
 # Imports
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
+from my_pandas_extensions.database import collect_data
+from my_pandas_extensions.timeseries import summarize_by_time
+
+import plotnine
+from plotnine import *
 
 # Matplotlib stylings
 
 
 # Data
 
-
+df = collect_data()
 
 # 1.0 Scatter Plots ----
 # - Great for Continuous vs Continuous
