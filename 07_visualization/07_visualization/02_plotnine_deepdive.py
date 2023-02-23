@@ -25,8 +25,21 @@ df = collect_data()
 # Goal: Explain relationship between order line value
 #  and quantity of bikes sold
 
+#Step 1: Data Manipulation
+quantity_total_price_by_order_df = df[['order_id', 'quantity', 'total_price']]\
+    .groupby('order_id')\
+    .sum()\
+    .reset_index()        
 
-
+# Step 2: Data Visualization
+(
+    ggplot(
+        mapping = aes(x = 'quantity', y = 'total_price'),
+        data    = quantity_total_price_by_order_df
+    )
+    + geom_point(alpha = 0.5)
+    + geom_smooth(method = 'lm')   
+)
 
 # 2.0 Line Plot ----
 # - Great for time series
@@ -35,10 +48,30 @@ df = collect_data()
 
 # Step 1: Data Manipulation
 
-
+bike_sales_m_df = df\
+    .summarize_by_time(
+        date_column  = "order_date",
+        value_column = "total_price",
+        rule         = "M",
+        kind         = "timestamp"
+    )\
+    .reset_index()    
 
 # Step 2: Plot
-
+(
+    ggplot(
+        mapping = aes('order_date', 'total_price'),
+        data    = bike_sales_m_df 
+    )
+    + geom_line()
+    + geom_smooth(method = "lm", se = False)
+    + geom_smooth(
+        method = "lowess",
+        se     = False,
+        span   = 0.2,
+        color  = "dodgerblue"
+        ) 
+)
 
 
 
