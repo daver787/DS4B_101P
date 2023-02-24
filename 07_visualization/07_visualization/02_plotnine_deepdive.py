@@ -82,14 +82,37 @@ bike_sales_m_df = df\
 
 # Step 1: Data Manipulation
 
+from plydata.cat_tools import cat_reorder
 
+bike_sales_cat2_df = df\
+    .groupby('category_2')\
+    .agg(
+        {'total_price':np.sum}
+    )\
+    .reset_index()\
+    .sort_values('total_price', ascending = False)\
+    .assign(
+        category_2 = lambda x: cat_reorder(
+            x['category_2'], x['total_price'],
+            ascending =True
+    )
+    )\
+    .sort_values('category_2')            
 # Aside: Categorical Data (pd.Categorical)
 # - Used frequently in plotting to designate order of categorical data
 
-
-
+bike_sales_cat2_df.info()
+bike_sales_cat2_df.category_2.cat.codes
 # Step 2: Plot
-
+(
+    ggplot(
+        mapping = aes(x = 'category_2', y = 'total_price'),
+        data    = bike_sales_cat2_df
+    )
+    + geom_col(fill ="#2c3e50", color = "white")
+    + coord_flip()
+    + theme_minimal()
+)   
 
 
 # 4.0 Histogram / Density Plots ----
