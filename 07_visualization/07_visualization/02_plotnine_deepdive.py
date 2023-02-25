@@ -124,13 +124,30 @@ bike_sales_cat2_df.category_2.cat.codes
 
 # Step 1: Data Manipulation
 
+unit_price_by_frame_df = df[['model', 'frame_material', 'price']]\
+    .drop_duplicates()
+
 
 # Step 2: Visualize
 
+g_canvas = ggplot(
+    data    = unit_price_by_frame_df,
+    mapping = aes(x = 'price', fill = 'frame_material')
+)
 
+
+g1 = g_canvas + geom_histogram(bins = 25, color = 'white', fill = '#2c3e50')
+
+g2 = g_canvas + geom_histogram(bins = 25)
+
+g2 + facet_grid(facets = ['.', 'frame_material'])
+
+g2 + facet_grid(facets = ['frame_material', '.'])
 # Density ----
 
+g3 = g_canvas + geom_density(alpha = 0.5)
 
+g3 + facet_wrap('frame_material', ncol = 1)
 
 
 # 5.0 Box Plot / Violin Plot ----
