@@ -157,17 +157,43 @@ g3 + facet_wrap('frame_material', ncol = 1)
 
 # Step 1: Data Manipulation
 
+unit_price_by_cat2_df = df[['category_2','model','price']]\
+    .drop_duplicates()\
+    .assign(
+        category_2 = lambda x: cat_reorder(
+            x['category_2'], x['price'],
+            fun       = np.median,
+            ascending = True
+        )
+    )    
 
+unit_price_by_cat2_df.info()
 
 # Step 2: Visualize
 
 # Box Plot
-
+(
+    ggplot(
+        mapping = aes(x= 'category_2', y= 'price'),
+        data    = unit_price_by_cat2_df
+    )
+    + geom_boxplot()
+    + coord_flip()
+    
+)
 
 
 # Violin Plot & Jitter Plot
 
-
+(
+    ggplot(
+        mapping  = aes(x = 'category_2', y = 'price'),
+        data     = unit_price_by_cat2_df
+    ) 
+    + geom_violin()
+    + geom_jitter(width = 0.15, alpha = 0.5)
+    + coord_flip()   
+)
 
 # 6.0 Adding Text & Label Geometries----
 
