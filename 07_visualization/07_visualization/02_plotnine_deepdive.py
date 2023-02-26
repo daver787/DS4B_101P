@@ -201,11 +201,39 @@ unit_price_by_cat2_df.info()
 
 # Data Manipulation
 
+from mizani.formatters import dollar_format
 
+usd = dollar_format(prefix = "$", big_mark = "," ,digits = 0)
+
+usd([10,100,10e10])
+
+
+bike_sales_y_df = df\
+    .summarize_by_time(
+        date_column  = "order_date",
+        value_column = "total_price",
+        rule         = "Y"
+    )\
+    .reset_index()\
+    .assign(
+        total_price_text = lambda x : usd(x['total_price'])
+    )       
 
 # Adding text to bar chart
 # Filtering labels to highlight a point
-
+(
+    ggplot(aes('order_date','total_price'), bike_sales_y_df)
+    + geom_col(fill = "#2c3e50")
+    + geom_smooth(method = "lm", se = False, color = "dodgerblue")
+    + geom_text(
+      aes(label = "total_price_text"),
+      va      = "top",
+      size    = 8,
+      nudge_y = -1.2e5,
+      color   = "white"
+      )
+    
+)
 
 
 # 7.0 Facets, Scales, Themes, and Labs ----
