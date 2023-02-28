@@ -232,7 +232,17 @@ bike_sales_y_df = df\
       nudge_y = -1.2e5,
       color   = "white"
       )
-    
+    + geom_label(
+        label   = "Major Demand",
+        color   = "red",
+        #nudge_y = "1e6",
+        #size    = 10,
+        data    = bike_sales_y_df[bike_sales_y_df.order_date.dt.year == 2013]
+    )
+    + expand_limits( y = [0,20e6])
+    + scale_x_datetime(date_labels ="%Y")
+    + scale_y_continuous(labels = usd)
+    +theme_minimal()
 )
 
 
