@@ -4,6 +4,7 @@
 # Imports
 import pandas as pd
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 
 from my_pandas_extensions.database import collect_data
@@ -256,10 +257,49 @@ bike_sales_y_df = df\
 
 # Step 1: Format Data
 
+bike_sales_cat2_m_df = df\
+    .summarize_by_time(
+        date_column  = 'order_date',
+        value_column = 'total_price',
+        groups       = 'category_2',
+        rule         = 'M',
+        wide_format  = False
+    )\
+    .reset_index()    
 
 # Step 2: Visualize
 
+matplotlib.pyplot.style.available
+matplotlib.style.use('dark_background')
+#matplotlib.style.use('default')
 
+g = (
+    ggplot(
+        aes('order_date', 'total_price', color = 'category_2'),
+        data = bike_sales_cat2_m_df)
+    + geom_line()
+    + geom_smooth(span = 0.2, se = False, color = 'dodgerblue')
+    + facet_wrap('category_2', ncol = 3, scales = 'free_y')
+    + scale_x_datetime(date_labels = '%Y', date_breaks = '2 years')
+    + scale_y_continuous(labels = usd)
+    + scale_color_cmap_d()
+    + theme_minimal()
+    + theme(
+        strip_background = element_rect(fill = "white"),
+        legend_position  = 'none',
+        figure_size      = (16,8),
+        subplots_adjust  ={'wspace': 0.25}
+        #legend_background=element_rect(fill = "white")
+    )
+    + labs(
+        title = 'Revenue by Month and Category 2',
+        x     = 'Date',
+        y     = 'Revenue'
+    )
+    
+)
+
+g.save("07_visualization/bike_sales_cat2_m_df.jpg")
 
 
 
