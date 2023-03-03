@@ -270,14 +270,14 @@ bike_sales_cat2_m_df = df\
 # Step 2: Visualize
 
 matplotlib.pyplot.style.available
-matplotlib.style.use('dark_background')
-#matplotlib.style.use('default')
+#matplotlib.style.use('dark_background')
+matplotlib.style.use('default')
 
 g = (
     ggplot(
-        aes('order_date', 'total_price', color = 'category_2'),
-        data = bike_sales_cat2_m_df)
-    + geom_line()
+        mapping = aes('order_date', 'total_price'),
+        data    = bike_sales_cat2_m_df)
+    + geom_line(color ="#2c3e50")
     + geom_smooth(span = 0.2, se = False, color = 'dodgerblue')
     + facet_wrap('category_2', ncol = 3, scales = 'free_y')
     + scale_x_datetime(date_labels = '%Y', date_breaks = '2 years')
@@ -285,8 +285,9 @@ g = (
     + scale_color_cmap_d()
     + theme_minimal()
     + theme(
-        strip_background = element_rect(fill = "white"),
-        legend_position  = 'none',
+        strip_background = element_rect(fill = "#2c3e50"),
+        strip_text       = element_text(color= "white"),
+        legend_position  = 'none', 
         figure_size      = (16,8),
         subplots_adjust  ={'wspace': 0.25}
         #legend_background=element_rect(fill = "white")
