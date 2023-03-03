@@ -4,6 +4,7 @@
 # Imports
 import pandas as pd
 import numpy as np
+import scipy as sp
 
 from plotnine import *
 from mizani.formatters import dollar_format
