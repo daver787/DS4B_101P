@@ -23,7 +23,7 @@ arima_forecast_df = df\
        value_column =  'total_price',
        groups       = 'category_1',
        rule         = 'M',
-       kind         = 'period',
+       kind         = 'timestamp',
        wide_format  = True
     )\
     .arima_forecast(
@@ -36,13 +36,32 @@ arima_forecast_df = df\
 
 # Step 1: Data preparation for Plot
 
+df_prepped = arima_forecast_df\
+   .melt(
+      id_vars    = ['category_1','order_date','ci_low', 'ci_hi'],
+      value_vars = ['value', 'prediction'],
+      var_name   = '.variable',
+      value_name = '.value'
+   )\
+   .rename({".value":"value"}, axis = 1)
+   # /
+   # .assign(
+   #    order_date = lambda x : x['order_date'].dt.to_timestamp()
+   # )    
 
 # Step 2: Plotting
-
-
-
-
-
+(
+ggplot(
+   mapping = aes(x = 'order_date', y = 'value', color = '.variable'),
+   data    = df_prepped
+)
+   + geom_ribbon(
+      aes(ymin = 'ci_low', ymax = 'ci_hi'),
+      alpha = 0.2,
+      color = None)
+   + geom_line()
+   + facet_wrap('category_1', ncol = 1, scales = 'free_y')
+)
 # 2.0 PLOTTING AUTOMATION ----
 # - Make plot_forecast()
 
