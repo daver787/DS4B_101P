@@ -12,6 +12,8 @@ from mizani.formatters import dollar_format
 from my_pandas_extensions.database import collect_data
 from my_pandas_extensions.timeseries import summarize_by_time
 from my_pandas_extensions.forecasting import arima_forecast
+from my_pandas_extensions.forecasting import plot_forecast
+from plydata.cat_tools import cat_reorder
 
 # Workflow until now
 
@@ -29,8 +31,7 @@ arima_forecast_df = df\
     .arima_forecast(
        h  = 12,
        sp = 12 
-    )      
-
+    )
 
 # 1.0 FORECAST VISUALIZATION ----
 
@@ -82,7 +83,7 @@ ggplot(
 # Function Development 
 
 data        = arima_forecast_df
-id_column   = 'category_1'
+id_column   = 'category_2'
 date_column = 'order_date'
 
 
@@ -118,6 +119,14 @@ def plot_forecast(
       value_name = '.value'
    )\
    .rename({".value":"value"}, axis = 1)
+   
+   # Handle the Categorical Conversion
+   df_prepped[id_column] = cat_reorder(
+      c         = df_prepped[id_column],
+      x         = df_prepped['value'],
+      fun       = np.mean,
+      ascending = False
+      )
    
    # Checking for period, convert to datetime64
    if df_prepped['order_date'].dtype is not 'datetime64[ns]':
@@ -188,15 +197,18 @@ plot_forecast(
    id_column    ='category_2',
    date_column  ='order_date',
    facet_ncol   = 3,
-   facet_scales = None,
+   facet_scales = 'free_y',
    date_labels  = '%b %Y',
    date_breaks  = '2 years',
-   figure_size  = (8,8),
+   figure_size  = (16,8),
    title        = 'Revenue Over Time'
 )         
 
 
-
+arima_forecast_df.plot_forecast(
+   id_column   = 'category_2',
+   date_column = 'order_date',
+   facet_ncol  = 3)
 
 
 
