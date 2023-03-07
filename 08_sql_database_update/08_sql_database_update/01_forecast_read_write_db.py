@@ -78,7 +78,7 @@ def prep_forecast_data_for_update(
     return(df)
 
 prep_forecast_data_for_update(
-    data        = arima_forecast_df.drop('ci_low', axis = 1),
+    data        = arima_forecast_df,
     id_column   = 'category_2',
     date_column = 'order_date'
     )
@@ -86,6 +86,85 @@ prep_forecast_data_for_update(
 
 # 2.0 WRITE TO DATABASE ----
 
+def write_forecast_to_database(
+    data, id_column, date_column, 
+    conn_string = "sqlite:///00_database/bike_orders_database.sqlite",
+    table_name  = "forecast",
+    if_exists   = "fail",
+    **kwargs
+):
+    # Prepare the data
+    df = prep_forecast_data_for_update(
+    data        = data,
+    id_column   = id_column,
+    date_column = date_column
+    )
+       
+    # Check format for SQL Database   
+    df['date'] = df['date'].dt.to_timestamp()
+    
+    sql_dtype = {
+        "id"         : sql.String(),
+        "date"       : sql.String(),
+        "value"      : sql.Numeric(),
+        "prediction" : sql.Numeric(),
+        "ci_low"     : sql.Numeric(),
+        "ci_hi"      : sql.Numeric()     
+    }
+    
+    # Connect to the Database
+    
+    engine = sql.create_engine(conn_string)
+    
+    conn = engine.connect()
+    
+    df.to_sql(
+        con       = conn,
+        name      = table_name,
+        if_exists = if_exists,
+        dtype     = sql_dtype,
+        index     = False
+        #**kwargs
+        )
+    # Close the connection
+    conn.close()
+    
+    pass
+    
+write_forecast_to_database(
+    data        = arima_forecast_df,
+    id_column   = "category_2",
+    date_column = "order_date",
+    table_name  = "forecast_2",
+    if_exists   = "replace"
+    )
+
+sql.Table("forecast_2",sql.MetaData(conn)).drop()
 
 # 3.0 READ FROM DATABASE ----
 
+def read_forecast_from_database(
+    conn_string = "sqlite:///00_database/bike_orders_database.sqlite",
+    table_name  = "forecast",
+    **kwargs
+):
+   
+   # Connect to Database
+   engine = sql.create_engine(conn_string)
+    
+   conn = engine.connect()
+    
+   # Read from Table
+   
+   df = pd.read_sql(
+       f"SELECT * from {table_name}",
+               con         = conn,
+               parse_dates = ['date']
+               )
+   
+   # Close Connection 
+   conn.close()
+   
+   return df
+
+read_forecast_from_database(table_name = "forecast")
