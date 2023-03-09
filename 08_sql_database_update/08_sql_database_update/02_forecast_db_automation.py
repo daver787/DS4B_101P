@@ -8,7 +8,8 @@ import numpy as np
 from my_pandas_extensions.database import (
     collect_data, 
     write_forecast_to_database,
-    read_forecast_from_database
+    read_forecast_from_database,
+    prep_forecast_data_for_update
 )
 
 from my_pandas_extensions.timeseries import summarize_by_time
@@ -21,7 +22,7 @@ df = collect_data()
 
 # 1.1 Total Revenue ----
 
-df\
+forecast_1_df = df\
     .summarize_by_time(
         date_column  = 'order_date',
         value_column = 'total_price',
@@ -32,14 +33,69 @@ df\
         h  = 12,
         sp = 12
     )\
-    .assign(id = 'Total Revenue')    
-
+    .assign(id = 'Total Revenue')\
+    .prep_forecast_data_for_update(
+        id_column   = 'id',
+        date_column = 'order_date'
+    )
+    
+forecast_1_df\
+    .plot_forecast(
+      id_column   = 'id',
+      date_column = 'date'  
+    )    
 
 # 1.2 Revenue by Category 1 ----
 
+forecast_2_df = df\
+    .summarize_by_time(
+        date_column  = 'order_date',
+        value_column = 'total_price',
+        groups       = 'category_1',
+        rule         = 'M',
+        kind         = 'period'
+    )\
+    .arima_forecast(
+        h  = 12,
+        sp = 12
+    )\
+    .prep_forecast_data_for_update(
+        id_column   = 'category_1',
+        date_column = 'order_date'
+    )
+
+pd.concat([forecast_1_df, forecast_2_df], axis = 0)\
+    .plot_forecast(
+      id_column   = 'id',
+      date_column = 'date'  
+    ) 
 
 # 1.3 Revenue by Category 2 ----
 
+
+forecast_3_df = df\
+    .summarize_by_time(
+        date_column  = 'order_date',
+        value_column = 'total_price',
+        groups       = 'category_2',
+        rule         = 'M',
+        kind         = 'period'
+    )\
+    .arima_forecast(
+        h  = 12,
+        sp = 12
+    )\
+    .prep_forecast_data_for_update(
+        id_column   = 'category_2',
+        date_column = 'order_date'
+    )
+    
+pd.concat([forecast_1_df, forecast_2_df, forecast_3_df], axis = 0)\
+    .plot_forecast(
+      id_column   = 'id',
+      date_column = 'date',
+      facet_ncol  = 3  
+    )     
 
 # 1.4 Revenue by Customer ----
 
