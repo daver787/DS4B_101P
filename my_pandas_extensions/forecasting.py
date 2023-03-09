@@ -177,7 +177,7 @@ def plot_forecast(
        )
     
     # Checking for period, convert to datetime64
-    if df_prepped['order_date'].dtype is not 'datetime64[ns]':
+    if df_prepped[date_column].dtype is not 'datetime64[ns]':
        #Try changing to timestamp
        try:
           df_prepped[date_column] = df_prepped[date_column].dt.to_timestamp()

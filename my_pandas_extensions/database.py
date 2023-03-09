@@ -103,6 +103,9 @@ def prep_forecast_data_for_update(
         col_text = ", ".join(required_col_names)
         raise Exception(f'Columns must contain: {col_text}')
     
+    # Reorder columns
+    df = df[required_col_names]
+    
     return(df)
 
 # WRITE FORECAST ----
