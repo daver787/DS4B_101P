@@ -106,6 +106,9 @@ def prep_forecast_data_for_update(
     # Reorder columns
     df = df[required_col_names]
     
+    # Check format for SQL Database  
+    df['date'] = df['date'].dt.to_timestamp()
+    
     return(df)
 
 # WRITE FORECAST ----
@@ -142,8 +145,6 @@ def write_forecast_to_database(
     date_column = date_column
     )
        
-    # Check format for SQL Database   
-    df['date'] = df['date'].dt.to_timestamp()
     
     sql_dtype = {
         "id"         : sql.String(),
