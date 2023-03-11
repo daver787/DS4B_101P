@@ -107,7 +107,10 @@ def prep_forecast_data_for_update(
     df = df[required_col_names]
     
     # Check format for SQL Database  
-    df['date'] = df['date'].dt.to_timestamp()
+    #df['date'] = df['date'].dt.to_timestamp()
+    
+    df = convert_to_datetime(df, 'date')
+    
     
     return(df)
 
@@ -213,3 +216,21 @@ def read_forecast_from_database(
    conn.close()
    
    return df
+
+
+# UTILITIES ----
+def convert_to_datetime(data, date_column):
+    
+    df_prepped = data
+    
+    if df_prepped[date_column].dtype is not 'datetime64[ns]':
+       #Try changing to timestamp
+       try:
+          df_prepped[date_column] = df_prepped[date_column].dt.to_timestamp()
+       except:
+          try:
+             df_prepped[date_column] = pd.to_datetime(df_prepped[date_column])
+          except:   
+             raise Exception("Could not auto-convert `date_column` to datetime64.")
+    
+    return df_prepped     

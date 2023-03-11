@@ -4,6 +4,7 @@
 import pandas as pd
 import numpy as np
 import pandas_flavor as pf
+from my_pandas_extensions.database import convert_to_datetime
 from sktime.forecasting.arima import AutoARIMA
 from tqdm import tqdm
 
@@ -177,15 +178,7 @@ def plot_forecast(
        )
     
     # Checking for period, convert to datetime64
-    if df_prepped[date_column].dtype is not 'datetime64[ns]':
-       #Try changing to timestamp
-       try:
-          df_prepped[date_column] = df_prepped[date_column].dt.to_timestamp()
-       except:
-          try:
-             df_prepped[date_column] = pd.to_datetime(df_prepped[date_column])
-          except:   
-             raise Exception("Could not auto-convert `date_column` to datetime64.")   
+    df_prepped = convert_to_datetime(df_prepped, date_column)  
           
     #Preparing the Plot
     

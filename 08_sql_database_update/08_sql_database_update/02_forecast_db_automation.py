@@ -9,7 +9,8 @@ from my_pandas_extensions.database import (
     collect_data, 
     write_forecast_to_database,
     read_forecast_from_database,
-    prep_forecast_data_for_update
+    prep_forecast_data_for_update,
+    convert_to_datetime
 )
 
 from my_pandas_extensions.timeseries import summarize_by_time
@@ -140,6 +141,10 @@ all_forecasts_df = pd.concat(
         ],
         axis = 0)
 
+all_forecasts_df.to_pickle("08_sql_database_update/all_forecasts_df.pkl")
+
+all_forecasts_df = pd.read_pickle("08_sql_database_update/all_forecasts_df.pkl")
+
 # 2.1 Write to Database ----
 
 all_forecasts_df.write_forecast_to_database(
@@ -148,4 +153,15 @@ all_forecasts_df.write_forecast_to_database(
 )
 
 
+convert_to_datetime(all_forecasts_df, date_column = 'date')
+
+all_forecasts_df\
+    .write_forecast_to_database(
+        id_column   = 'id',
+        date_column = 'date',
+        if_exists   = 'replace'
+    )
+
 # 2.2 Read from Database ----
+
+all_forecast_df_from_db = read_forecast_from_database()
