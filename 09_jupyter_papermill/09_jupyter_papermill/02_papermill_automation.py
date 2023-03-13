@@ -3,9 +3,16 @@
 
 # IMPORTS ----
 
+import pandas as pd
+import numpy as np
+
+import papermill as pm
+
+from my_pandas_extensions.database import read_forecast_from_database
 
 # COLLECT DATA ----
 
+df = read_forecast_from_database()
 
 # 1.0 SELECTING REPORT ID'S ----
 
