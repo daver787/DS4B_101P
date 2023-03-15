@@ -68,10 +68,25 @@ if not directory_exists:
 
 # 4.0 PAPERMILL ----
 
+# Key Variable
+
+i = 0
+
+template_path = pathlib.Path("09_jupyter_papermill/template/jupyter_report_template.ipynb") 
+
+output_path   = pathlib.Path(f'/09_jupyter_papermill/reports/sales_report_{i}_.ipynb')
+
 # Iterating without a loop
 
+params = {
+    'ids'  : id_sets[i],
+    'title': f'Sales Report{i+1}',
+    'data' : df.to_json()
+}
 
-
+data = df.to_json()
+data_from_json = pd.read_json(data, convert_dates = True)
+data_from_json.info()
 
 # Iterating with for-loop and enumerate()
 
