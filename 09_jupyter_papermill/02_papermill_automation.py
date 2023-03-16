@@ -70,26 +70,51 @@ if not directory_exists:
 
 # Key Variable
 
-i = 0
+i = 3
 
 template_path = pathlib.Path("09_jupyter_papermill/template/jupyter_report_template.ipynb") 
 
-output_path   = pathlib.Path(f'/09_jupyter_papermill/reports/sales_report_{i}_.ipynb')
+output_path   = pathlib.Path(f'09_jupyter_papermill/reports/sales_report_{i}_.ipynb')
 
 # Iterating without a loop
 
 params = {
     'ids'  : id_sets[i],
-    'title': f'Sales Report{i+1}',
+    'title': f'Sales Report{i}',
     'data' : df.to_json()
 }
 
-data = df.to_json()
-data_from_json = pd.read_json(data, convert_dates = True)
-data_from_json.info()
+pm.execute_notebook(
+    input_path  = template_path,
+    output_path = output_path,
+    parameters  = params,
+    report_mode = True
+)
+
+
+# data = df.to_json()
+# data_from_json = pd.read_json(data, convert_dates = True)
+# data_from_json.info()
 
 # Iterating with for-loop and enumerate()
 
+for i, id_set in enumerate(id_sets):
+    template_path = pathlib.Path("09_jupyter_papermill/template/jupyter_report_template.ipynb") 
 
+    output_path   = pathlib.Path(f'09_jupyter_papermill/reports/sales_report_{i}_.ipynb')
 
+# Iterating without a loop
+
+    params = {
+        'ids'  : id_set,
+        'title': f'Sales Report{i}',
+        'data' : df.to_json()
+    }
+
+    pm.execute_notebook(
+    input_path  = template_path,
+    output_path = output_path,
+    parameters  = params,
+    report_mode = True
+    )
 
