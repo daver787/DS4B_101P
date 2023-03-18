@@ -100,6 +100,8 @@ dependencies:
       - ipympl==0.7.0
       - jupytext
       - papermill==2.3.3
+      - pandoc
+
 
       # Apps
       # - streamlit==0.80.0

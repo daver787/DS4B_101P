@@ -129,6 +129,10 @@ def run_reports(data,
         )
     pass
 
+# Test reporting.py
+
+from my_pandas_extensions.reporting import run_reports
+
 run_reports(data          = df,
             id_sets       = id_sets,
             report_titles = titles,
