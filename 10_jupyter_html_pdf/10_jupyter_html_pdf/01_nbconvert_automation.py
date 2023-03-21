@@ -37,15 +37,51 @@ file_path.parents[0]
 
 # 2.0 HTML EXPORT ----
 
+c.HTMLExporter.preprocessors = ["nbconvert.preprocessors.TagRemovePreprocessor"]
 
+c
+
+(body, resources) = HTMLExporter(config = c)\
+    .from_filename(file_path)
+
+body
+resources
+
+file_dir = file_path.parents[0]
+
+file_dir_html = str(file_dir) + "_html"
+
+c.FilesWriter.build_directory = str(file_dir_html)
+
+c
+
+fw = FilesWriter(config = c)
+fw.write(body, resources, notebook_name = "test")
 
 # Iterate through files ----
 
-
+for file in tqdm(files):
+    file_path = pathlib.Path(file)
+    file_name = file_path.stem
+    file_dir  = file_path.parents[0]
+    
+    (body, resources) = HTMLExporter(config = c).from_filename(file_path)
+    file_dir_html = str(file_dir) + "_html"
+    c.FilesWriter.build_directory = str(file_dir_html)
+    fw =FilesWriter(config = c)
+    fw.write(body, resources, notebook_name = file_name)
+    
 
 # 3.0 PDF EXPORT ----
 # - REQUIRES MIKETEX: https://miktex.org/download
 # Stack Overflow: https://stackoverflow.com/questions/59225719/latex-error-related-to-tcolorbox-sty-not-found
 
-
-    
+for file in tqdm(files):
+    file_path = pathlib.Path(file)
+    file_name = file_path.stem
+    file_dir  = file_path.parents[0]
+    (body, resources) = PDFExporter(config = c).from_filename(file_path)
+    file_dir_pdf = str(file_dir) + "_pdf"
+    c.FilesWriter.build_directory = str(file_dir_pdf)
+    fw =FilesWriter(config = c)
+    fw.write(body, resources, notebook_name = file_name)
